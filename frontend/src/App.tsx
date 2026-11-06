@@ -5,6 +5,7 @@ import { HouseholdList } from './components/HouseholdList';
 import { NeedsModal } from './components/NeedsModal';
 import { DuplicatesView } from './components/DuplicatesView';
 import { DocumentReviewModal } from './components/DocumentReviewModal';
+import { AddHouseholdModal } from './components/AddHouseholdModal';
 import { api } from './services/api';
 import type {
   AuthResponse,
@@ -13,7 +14,7 @@ import type {
   NeedsAssessmentData,
   DocumentData,
 } from './types';
-import { Users, Copy, RefreshCw, ShieldAlert } from 'lucide-react';
+import { Users, Copy, RefreshCw, ShieldAlert, UserPlus } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AuthResponse | null>(null);
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
   const [duplicates, setDuplicates] = useState<DuplicateSuspicion[]>([]);
   const [selectedNeedsData, setSelectedNeedsData] = useState<NeedsAssessmentData | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentData | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [selectedIdType, setSelectedIdType] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -105,7 +107,6 @@ export const App: React.FC = () => {
     notes: string
   ) => {
     await api.verifyDocument(documentId, verifiedFields, notes);
-    // Reload households
     await loadDashboardData();
   };
 
@@ -120,9 +121,14 @@ export const App: React.FC = () => {
       resolution_reason: reason,
       primary_household_id: primaryId,
     });
-    // Refresh duplicates
     const updated = await api.getDuplicates();
     setDuplicates(updated);
+  };
+
+  const handleHouseholdCreated = async (newHouseholdId: string) => {
+    await loadDashboardData();
+    // Open the needs assessment modal immediately for the new household!
+    await handleInspectNeeds(newHouseholdId);
   };
 
   return (
@@ -187,13 +193,25 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          <button
-            onClick={loadDashboardData}
-            title="تحديث البيانات"
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-white rounded-xl transition border border-transparent hover:border-slate-200"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-emerald-600' : ''}`} />
-          </button>
+          <div className="flex items-center gap-2 mb-2">
+            {currentUser?.role !== 'DATA_ANALYST' && (
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>+ تسجيل أسرة جديدة</span>
+              </button>
+            )}
+
+            <button
+              onClick={loadDashboardData}
+              title="تحديث البيانات"
+              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-white rounded-xl transition border border-transparent hover:border-slate-200"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-emerald-600' : ''}`} />
+            </button>
+          </div>
         </div>
 
         {/* Tab Content */}
@@ -214,6 +232,13 @@ export const App: React.FC = () => {
           />
         )}
       </main>
+
+      {/* Add Household Modal */}
+      <AddHouseholdModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onCreated={handleHouseholdCreated}
+      />
 
       {/* Needs Assessment Explainability Modal */}
       <NeedsModal

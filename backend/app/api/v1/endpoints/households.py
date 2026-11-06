@@ -92,6 +92,27 @@ def list_households(
     return items
 
 
+@router.get("/geography/villages")
+def list_available_villages(
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    """قائمة القرى والأحياء المتاحة للاختيار عند تسجيل أسرة جديدة"""
+    villages = db.query(Village).all()
+    results = []
+    for v in villages:
+        uzlah = db.query(Uzlah).filter_by(id=v.uzlah_id).first()
+        dist = db.query(District).filter_by(id=uzlah.district_id).first() if uzlah else None
+        results.append({
+            "id": str(v.id),
+            "name": v.name_ar,
+            "uzlah_name": uzlah.name_ar if uzlah else "",
+            "district_name": dist.name_ar if dist else "",
+            "full_label": f"{v.name_ar} - {dist.name_ar if dist else ''}",
+        })
+    return results
+
+
 @router.get("/{household_id}", response_model=HouseholdOut)
 def get_household(
     household_id: uuid.UUID,

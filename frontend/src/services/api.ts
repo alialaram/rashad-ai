@@ -90,6 +90,17 @@ export const api = {
     return this.request<HouseholdDetails>(`/households/${id}`);
   },
 
+  async getVillages(): Promise<Array<{ id: string; name: string; full_label: string }>> {
+    return this.request<Array<{ id: string; name: string; full_label: string }>>('/households/geography/villages');
+  },
+
+  async createHousehold(data: any): Promise<HouseholdDetails> {
+    return this.request<HouseholdDetails>('/households', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
   // Needs Assessment
   async getNeedsAssessment(householdId: string): Promise<NeedsAssessmentData> {
     return this.request<NeedsAssessmentData>(`/needs/${householdId}`);
