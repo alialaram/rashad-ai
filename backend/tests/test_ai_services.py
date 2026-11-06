@@ -48,7 +48,7 @@ def test_duplicate_detection_engine():
         assert stats["exact_phone_matches"] >= 1, "Expected at least 1 exact phone match (injected case)"
 
         # التحقق من تسجيل الحالات في جدول duplicate_suspicions
-        suspicions = session.query(DuplicateSuspicion).all()
+        suspicions = session.query(DuplicateSuspicion).filter_by(resolution_status="PENDING").all()
         assert len(suspicions) == stats["total_suspicions"]
         
         # التأكد من عدم الدمج الآلي وبقاء الحالة PENDING للمراجعة البشرية
