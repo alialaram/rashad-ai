@@ -1,0 +1,152 @@
+{
+  "model_engine": "RASHAD_AI_ML_SUITE_V1.0",
+  "trained_at": "2026-11-07",
+  "random_seed": 42,
+  "dataset_size": 155,
+  "features": [
+    "monthly_income",
+    "num_members",
+    "income_per_capita",
+    "dependency_ratio",
+    "num_earners",
+    "num_children",
+    "num_elderly",
+    "chronic_illness_count",
+    "disability_count",
+    "housing_vulnerability",
+    "is_undocumented",
+    "is_female_headed"
+  ],
+  "clustering": {
+    "algorithm": "K-Means",
+    "n_clusters": 4,
+    "silhouette_score": 0.15768921976694314,
+    "clusters": {
+      "0": {
+        "size": 35,
+        "percentage": 22.6,
+        "avg_income": 62228.57,
+        "avg_members": 3.7,
+        "avg_chronic": 0.51,
+        "avg_disability": 0.06,
+        "avg_housing_vuln": 2.81,
+        "info": {
+          "title_ar": "أسر نازحة ومعدمة شديدة الهشاشة",
+          "title_en": "Displaced & Destitute Severe Vulnerability",
+          "recommended_intervention": "صرف إغاثة طارئة عاجلة + سلة غذائية + بدل إيواء",
+          "description": "أسر تعاني من فقدان المأوى أو النزوح مع انعدام شبه تام للدخل ونقص الوثائق الثبوتية."
+        }
+      },
+      "1": {
+        "size": 28,
+        "percentage": 18.1,
+        "avg_income": 4357.14,
+        "avg_members": 3.1,
+        "avg_chronic": 0.79,
+        "avg_disability": 0.11,
+        "avg_housing_vuln": 3.27,
+        "info": {
+          "title_ar": "أسر ذات أعباء صحية وإعاقات مزمنة",
+          "title_en": "Severe Health & Chronic Disability Burden",
+          "recommended_intervention": "كفالة علاجية شهرية + إعانة نقدية للمعاقين",
+          "description": "أسر يثقل كاهلها وجود أفراد يعانون من أمراض مزمنة أو إعاقات حركية وذهنية مستديمة."
+        }
+      },
+      "2": {
+        "size": 49,
+        "percentage": 31.6,
+        "avg_income": 47734.69,
+        "avg_members": 6.1,
+        "avg_chronic": 0.9,
+        "avg_disability": 0.41,
+        "avg_housing_vuln": 2.69,
+        "info": {
+          "title_ar": "أسر كبيرة بمعدل إعالة ودخل شحيح",
+          "title_en": "Large High-Dependency Households",
+          "recommended_intervention": "مساعدة نقدية متعددة الأغراض موسعة + كفالة أيتام",
+          "description": "أسر تضم عدداً كبيراً من الأطفال والأيتام مع عائل وحيد بدخل متدنٍ للغاية."
+        }
+      },
+      "3": {
+        "size": 43,
+        "percentage": 27.7,
+        "avg_income": 0.0,
+        "avg_members": 5.8,
+        "avg_chronic": 0.84,
+        "avg_disability": 0.26,
+        "avg_housing_vuln": 2.22,
+        "info": {
+          "title_ar": "أسر محدودة الدخل مع استقرار نسبي",
+          "title_en": "Low-Income Moderate Need",
+          "recommended_intervention": "مشاريع تمكين اقتصادي أصغر + دعم موسمي",
+          "description": "أسر تمتلك سكناً أو إيجاراً مستقراً ودخلاً محدوداً، مؤهلة لمشاريع الإقراض الحسن والتمكين."
+        }
+      }
+    }
+  },
+  "classifier": {
+    "algorithm": "Random Forest Classifier",
+    "n_estimators": 100,
+    "max_depth": 6,
+    "test_accuracy": 0.7435897435897436,
+    "classification_report": {
+      "CRITICAL": {
+        "precision": 1.0,
+        "recall": 0.8571428571428571,
+        "f1-score": 0.9230769230769231,
+        "support": 7.0
+      },
+      "HIGH": {
+        "precision": 0.72,
+        "recall": 0.9,
+        "f1-score": 0.8,
+        "support": 20.0
+      },
+      "LOW": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 1.0
+      },
+      "MEDIUM": {
+        "precision": 0.625,
+        "recall": 0.45454545454545453,
+        "f1-score": 0.5263157894736842,
+        "support": 11.0
+      },
+      "accuracy": 0.7435897435897436,
+      "macro avg": {
+        "precision": 0.5862499999999999,
+        "recall": 0.5529220779220779,
+        "f1-score": 0.5623481781376518,
+        "support": 39.0
+      },
+      "weighted avg": {
+        "precision": 0.725,
+        "recall": 0.7435897435897436,
+        "f1-score": 0.7243849268140766,
+        "support": 39.0
+      }
+    },
+    "feature_importances": {
+      "housing_vulnerability": 0.17495272250472377,
+      "income_per_capita": 0.16386670409329637,
+      "num_members": 0.13848765078357486,
+      "disability_count": 0.10436206675567543,
+      "chronic_illness_count": 0.0901733287854848,
+      "monthly_income": 0.08491958991806299,
+      "num_children": 0.0646369147734641,
+      "dependency_ratio": 0.05566530856917916,
+      "num_elderly": 0.05313662020901087,
+      "is_female_headed": 0.028314292144371696,
+      "num_earners": 0.026603345919842123,
+      "is_undocumented": 0.014881455543313996
+    }
+  },
+  "demand_forecaster": {
+    "algorithm": "Random Forest Regressor",
+    "r2_score": 0.8883006544213274,
+    "mae_yer": 9292.026685926377
+  },
+  "governance_disclaimer": "مخرجات نماذج تعلم الآلة هي مؤشرات إحصائية وتحليلية مساندة للتصنيف واكتشاف الأنماط، ولا تمثل حكماً شرعياً أو قانونياً بالاستحقاق أو الحرمان."
+}

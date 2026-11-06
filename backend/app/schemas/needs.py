@@ -1,11 +1,13 @@
 import uuid
 from typing import Dict, Any, Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.models.needs_assessment import PriorityTier
 
 
 class NeedsAssessmentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: Optional[uuid.UUID] = None
     household_id: uuid.UUID
     calculated_score: float
@@ -18,6 +20,4 @@ class NeedsAssessmentOut(BaseModel):
     evaluator_override_tier: Optional[PriorityTier] = None
     evaluator_notes: Optional[str] = None
     created_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    ml_insights: Optional[Dict[str, Any]] = None

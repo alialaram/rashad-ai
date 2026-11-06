@@ -84,6 +84,39 @@ export interface FactorBreakdownItem {
   [key: string]: any;
 }
 
+export interface MLClusterInfo {
+  id: number;
+  title_ar: string;
+  title_en: string;
+  description: string;
+  recommended_intervention: string;
+}
+
+export interface MLDemandForecast {
+  estimated_aid_amount_yer: number;
+  currency: string;
+}
+
+export interface MLContributingFactor {
+  feature: string;
+  label_ar: string;
+  value: number;
+  importance_pct: number;
+}
+
+export interface MLInsights {
+  status: 'AVAILABLE' | 'UNAVAILABLE';
+  model_version?: string;
+  predicted_tier?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  confidence_pct?: number;
+  tier_probabilities?: Record<string, number>;
+  cluster?: MLClusterInfo;
+  demand_forecast?: MLDemandForecast;
+  top_contributing_factors?: MLContributingFactor[];
+  extracted_features?: Record<string, number>;
+  disclaimer_ar?: string;
+}
+
 export interface NeedsAssessmentData {
   id?: string;
   household_id: string;
@@ -96,6 +129,7 @@ export interface NeedsAssessmentData {
   disclaimer_acknowledged: boolean;
   evaluator_override_tier?: string | null;
   evaluator_notes?: string | null;
+  ml_insights?: MLInsights;
 }
 
 export interface DuplicateSuspicion {
