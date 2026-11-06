@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Sparkles, ShieldAlert, FileText, CheckCircle2 } from 'lucide-react';
+import { Search, Filter, Sparkles, ShieldAlert, FileText, CheckCircle2, FileCheck } from 'lucide-react';
 import type { HouseholdListItem } from '../types';
 
 interface HouseholdListProps {
@@ -8,6 +8,7 @@ interface HouseholdListProps {
   onSearch: (term: string) => void;
   onFilterIdType: (type: string) => void;
   onInspectNeeds: (householdId: string) => void;
+  onInspectDocument: (householdId: string) => void;
   selectedIdType: string;
 }
 
@@ -17,6 +18,7 @@ export const HouseholdList: React.FC<HouseholdListProps> = ({
   onSearch,
   onFilterIdType,
   onInspectNeeds,
+  onInspectDocument,
   selectedIdType,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -88,7 +90,7 @@ export const HouseholdList: React.FC<HouseholdListProps> = ({
               <th className="px-5 py-3.5">المسكن</th>
               <th className="px-5 py-3.5">الدخل الشهري</th>
               <th className="px-5 py-3.5">الأفراد</th>
-              <th className="px-5 py-3.5 text-center">دعم القرار (الذكاء الاصطناعي)</th>
+              <th className="px-5 py-3.5 text-center">العمليات والذكاء الاصطناعي</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 font-medium">
@@ -179,15 +181,27 @@ export const HouseholdList: React.FC<HouseholdListProps> = ({
                     {h.members_count} أفراد
                   </td>
 
-                  {/* زر فحص مؤشر الاحتياج */}
+                  {/* أزرار الإجراءات */}
                   <td className="px-5 py-4 whitespace-nowrap text-center">
-                    <button
-                      onClick={() => onInspectNeeds(h.id)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-bold border border-purple-200 transition shadow-2xs"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                      فحص مؤشر الاحتياج
-                    </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => onInspectNeeds(h.id)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-bold border border-purple-200 transition shadow-2xs"
+                        title="فحص مؤشر الاحتياج والبطاقة التفسيرية"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                        الاحتياج
+                      </button>
+
+                      <button
+                        onClick={() => onInspectDocument(h.id)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-800 rounded-xl text-xs font-bold border border-teal-200 transition shadow-2xs"
+                        title="معاينة وثيقة الهوية والتحقق البشري عبر OCR"
+                      >
+                        <FileCheck className="w-3.5 h-3.5 text-teal-700" />
+                        الوثيقة (OCR)
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

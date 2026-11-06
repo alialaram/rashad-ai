@@ -4,12 +4,14 @@ import { DashboardStats } from './components/DashboardStats';
 import { HouseholdList } from './components/HouseholdList';
 import { NeedsModal } from './components/NeedsModal';
 import { DuplicatesView } from './components/DuplicatesView';
+import { DocumentReviewModal } from './components/DocumentReviewModal';
 import { api } from './services/api';
 import type {
   AuthResponse,
   HouseholdListItem,
   DuplicateSuspicion,
   NeedsAssessmentData,
+  DocumentData,
 } from './types';
 import { Users, Copy, RefreshCw, ShieldAlert } from 'lucide-react';
 
@@ -19,6 +21,7 @@ export const App: React.FC = () => {
   const [households, setHouseholds] = useState<HouseholdListItem[]>([]);
   const [duplicates, setDuplicates] = useState<DuplicateSuspicion[]>([]);
   const [selectedNeedsData, setSelectedNeedsData] = useState<NeedsAssessmentData | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<DocumentData | null>(null);
   const [selectedIdType, setSelectedIdType] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -84,6 +87,26 @@ export const App: React.FC = () => {
     } catch (err: any) {
       alert(err.message || 'تعذر استرجاع بطاقة تقييم الاحتياج');
     }
+  };
+
+  const handleInspectDocument = async (householdId: string) => {
+    try {
+      // توليد وثيقة تجريبية فورية للأسرة أو استرجاعها
+      const doc = await api.generateDemoDocument(householdId);
+      setSelectedDocument(doc);
+    } catch (err: any) {
+      alert(err.message || 'تعذر استرجاع أو قراءة الوثيقة');
+    }
+  };
+
+  const handleVerifyDocument = async (
+    documentId: string,
+    verifiedFields: Record<string, string>,
+    notes: string
+  ) => {
+    await api.verifyDocument(documentId, verifiedFields, notes);
+    // Reload households
+    await loadDashboardData();
   };
 
   const handleResolveDuplicate = async (
@@ -181,6 +204,7 @@ export const App: React.FC = () => {
             onSearch={(term) => setSearchTerm(term)}
             onFilterIdType={(type) => setSelectedIdType(type)}
             onInspectNeeds={handleInspectNeeds}
+            onInspectDocument={handleInspectDocument}
             selectedIdType={selectedIdType}
           />
         ) : (
@@ -195,6 +219,13 @@ export const App: React.FC = () => {
       <NeedsModal
         data={selectedNeedsData}
         onClose={() => setSelectedNeedsData(null)}
+      />
+
+      {/* Document Review & Side-by-Side OCR Modal */}
+      <DocumentReviewModal
+        document={selectedDocument}
+        onClose={() => setSelectedDocument(null)}
+        onVerify={handleVerifyDocument}
       />
 
       {/* Institutional Footer */}

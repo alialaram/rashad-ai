@@ -119,3 +119,33 @@ export interface DuplicateSuspicion {
   resolution_reason?: string | null;
   created_at: string;
 }
+
+export interface OCRField {
+  value: string | null;
+  confidence: number;
+  label_ar: string;
+  requires_review: boolean;
+  human_corrected?: boolean;
+}
+
+export interface OCRExtractionData {
+  id: string;
+  document_id: string;
+  extracted_data: Record<string, OCRField>;
+  raw_text?: string | null;
+  overall_confidence: number;
+  human_verified: boolean;
+  verified_at?: string | null;
+}
+
+export interface DocumentData {
+  id: string;
+  household_id: string;
+  doc_type: string;
+  storage_path: string;
+  mime_type: string;
+  file_size_bytes: number;
+  ocr_status: string;
+  created_at: string;
+  ocr_extraction?: OCRExtractionData | null;
+}

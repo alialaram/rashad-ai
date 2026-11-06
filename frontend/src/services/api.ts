@@ -4,6 +4,7 @@ import type {
   HouseholdDetails,
   NeedsAssessmentData,
   DuplicateSuspicion,
+  DocumentData,
 } from '../types';
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
@@ -110,6 +111,35 @@ export const api = {
     return this.request<DuplicateSuspicion>(`/duplicates/${suspicionId}/resolve`, {
       method: 'POST',
       body: JSON.stringify(data),
+    });
+  },
+
+  // Document Intelligence & OCR
+  async generateDemoDocument(householdId: string): Promise<DocumentData> {
+    return this.request<DocumentData>(`/documents/generate-demo/${householdId}`, {
+      method: 'POST',
+    });
+  },
+
+  async getDocument(documentId: string): Promise<DocumentData> {
+    return this.request<DocumentData>(`/documents/${documentId}`);
+  },
+
+  getDocumentFileUrl(documentId: string): string {
+    return `${API_BASE_URL}/documents/${documentId}/file`;
+  },
+
+  async verifyDocument(
+    documentId: string,
+    verifiedFields: Record<string, string>,
+    reviewerNotes: string = 'تمت المطابقة والاعتماد البشري'
+  ): Promise<DocumentData> {
+    return this.request<DocumentData>(`/documents/${documentId}/verify`, {
+      method: 'POST',
+      body: JSON.stringify({
+        verified_fields: verifiedFields,
+        reviewer_notes: reviewerNotes,
+      }),
     });
   },
 };
